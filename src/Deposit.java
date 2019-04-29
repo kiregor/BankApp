@@ -15,8 +15,11 @@ boolean deposit, checkbalance;
 		depositscreen = new JFrame("Banking App");
 		JMenuBar menubar = new JMenuBar();
 		JMenu menu = new JMenu("File");
+		JMenu account = new JMenu("Account Tools");
+		JMenu access = new JMenu("Acount Access");
 		JMenuItem home = new JMenuItem("Home");
 		JMenuItem openitem = new JMenuItem("Open Account");
+		JMenuItem deleteaccount = new JMenuItem("Delete Account");
 		JMenuItem deposititem = new JMenuItem("Deposit");
 		JMenuItem withdrawitem = new JMenuItem("Withdraw");
 		JMenuItem checkbalanceitem = new JMenuItem("Check Balance");
@@ -51,10 +54,13 @@ boolean deposit, checkbalance;
 		p1.setLayout(new GridLayout(1,3));
 		
 		menu.add(home);
-		menu.add(openitem);
-		menu.add(deposititem);
-		menu.add(withdrawitem);
-		menu.add(checkbalanceitem);
+		menu.add(account);
+		menu.add(access);
+		account.add(openitem);
+		account.add(deleteaccount);
+		access.add(deposititem);
+		access.add(withdrawitem);
+		access.add(checkbalanceitem);
 		
 		menubar.add(menu);
 		
@@ -91,6 +97,12 @@ boolean deposit, checkbalance;
 		openitem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				mainmenu.openAccountPage(depositscreen);
+			}
+		});
+		
+		deleteaccount.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mainmenu.openAccountDeletionPage(depositscreen);
 			}
 		});
 		
@@ -147,6 +159,7 @@ boolean deposit, checkbalance;
 						accountdetails.setVisible(true);
 						if(!checkbalance) {
 						depositpanel.setVisible(true);
+						accountnumbertext.setEditable(false);
 						}
 					}
 					else {
