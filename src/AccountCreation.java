@@ -23,6 +23,7 @@ public class AccountCreation {
 		JMenuItem deposititem = new JMenuItem("Deposit");
 		JMenuItem withdrawitem = new JMenuItem("Withdraw");
 		JMenuItem checkbalanceitem = new JMenuItem("Check Balance");
+		JMenuItem exit = new JMenuItem("Exit");
 		
 		JLabel name = new JLabel("Name:");
 		JLabel address = new JLabel("Address:");
@@ -50,6 +51,7 @@ public class AccountCreation {
 		menu.add(home);
 		menu.add(account);
 		menu.add(access);
+		menu.add(exit);
 		account.add(openitem);
 		account.add(deleteaccount);
 		access.add(deposititem);
@@ -110,6 +112,12 @@ public class AccountCreation {
 		checkbalanceitem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				mainmenu.openCheckBalancePage(accountscreen);
+			}
+		});
+		
+		exit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
 			}
 		});
 		

@@ -9,7 +9,7 @@ import javax.swing.*;
 
 public class Deposit {
 JFrame depositscreen;
-boolean deposit, checkbalance;
+boolean deposit, checkbalance, accountDelete;
 	
 	public Deposit(BankApp mainmenu) {
 		depositscreen = new JFrame("Banking App");
@@ -23,9 +23,13 @@ boolean deposit, checkbalance;
 		JMenuItem deposititem = new JMenuItem("Deposit");
 		JMenuItem withdrawitem = new JMenuItem("Withdraw");
 		JMenuItem checkbalanceitem = new JMenuItem("Check Balance");
+		JMenuItem exit = new JMenuItem("Exit");
+		
+		JPanel contentpanel = new JPanel();
+		contentpanel.setLayout(new GridLayout(3,1));
 		
 		JLabel accountnumber = new JLabel("Account Number:");
-		JTextField accountnumbertext = new JTextField();
+		JTextField accountnumbertext = new JTextField(5);
 		JButton accountcheck = new JButton("...");
 		
 		JPanel accountdetails = new JPanel();
@@ -56,6 +60,7 @@ boolean deposit, checkbalance;
 		menu.add(home);
 		menu.add(account);
 		menu.add(access);
+		menu.add(exit);
 		account.add(openitem);
 		account.add(deleteaccount);
 		access.add(deposititem);
@@ -65,7 +70,6 @@ boolean deposit, checkbalance;
 		menubar.add(menu);
 		
 		depositscreen.setJMenuBar(menubar);
-		depositscreen.setLayout(new GridLayout(3,1));
 		
 		p1.add(accountnumber);
 		p1.add(accountnumbertext);
@@ -82,10 +86,11 @@ boolean deposit, checkbalance;
 		accountdetails.add(currentbalancevalue);
 		accountdetails.setVisible(false);
 		
-		depositscreen.add(p1);
-		depositscreen.add(accountdetails);
-		depositscreen.add(depositpanel);
+		contentpanel.add(p1);
+		contentpanel.add(accountdetails);
+		contentpanel.add(depositpanel);
 		
+		depositscreen.add(contentpanel);
 		depositscreen.setSize(400,400);
 		
 		home.addActionListener(new ActionListener() {
@@ -124,16 +129,24 @@ boolean deposit, checkbalance;
 			}
 		});
 		
+		exit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+		
 		depositscreen.addWindowListener(new WindowAdapter() {
 			public void windowActivated(WindowEvent e) {
 				if(!checkbalance) {
 					if(deposit) {
 						transaction.setText("Deposit");
 						depositammount.setText("Deposit Amount");
+						depositammounttext.setVisible(true);
 					}
 					else {
 						transaction.setText("Withdraw");
 						depositammount.setText("Withdrawal Amount");
+						depositammounttext.setVisible(true);
 					}
 				}
 			}
@@ -159,7 +172,6 @@ boolean deposit, checkbalance;
 						accountdetails.setVisible(true);
 						if(!checkbalance) {
 						depositpanel.setVisible(true);
-						accountnumbertext.setEditable(false);
 						}
 					}
 					else {

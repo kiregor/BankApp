@@ -20,6 +20,7 @@ public class BankApp {
 		JMenuItem deposititem = new JMenuItem("Deposit");
 		JMenuItem withdrawitem = new JMenuItem("Withdraw");
 		JMenuItem checkbalanceitem = new JMenuItem("Check Balance");
+		JMenuItem exit = new JMenuItem("Exit");
 		
 		ac = new AccountCreation(this);
 		d = new Deposit(this);
@@ -28,6 +29,7 @@ public class BankApp {
 		menu.add(home);
 		menu.add(account);
 		menu.add(access);
+		menu.add(exit);
 		account.add(openitem);
 		account.add(deleteaccount);
 		access.add(deposititem);
@@ -68,6 +70,12 @@ public class BankApp {
 			}
 		});
 		
+		exit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+		
 		mainscreen.setSize(400,400);
 		mainscreen.setVisible(true);
 	}
@@ -78,20 +86,20 @@ public class BankApp {
 	
 	public void openHomePage(JFrame currentwindow) {
 		mainscreen.setLocation(currentwindow.getLocation());
-		mainscreen.setVisible(true);
 		currentwindow.setVisible(false);
+		mainscreen.setVisible(true);
 	}
 	
 	public void openAccountPage(JFrame currentwindow) {
 		ac.accountscreen.setLocation(currentwindow.getLocation());
-		ac.accountscreen.setVisible(true);
 		currentwindow.setVisible(false);
+		ac.accountscreen.setVisible(true);
 	}
 	
 	public void openAccountDeletionPage(JFrame currentwindow) {
 		da.accountscreen.setLocation(currentwindow.getLocation());
-		da.accountscreen.setVisible(true);
 		currentwindow.setVisible(false);
+		da.accountscreen.setVisible(true);
 	}
 	
 	public void openDepositPage(JFrame currentwindow) {

@@ -33,6 +33,7 @@ public class AccountRemoval {
 		JMenuItem deposititem = new JMenuItem("Deposit");
 		JMenuItem withdrawitem = new JMenuItem("Withdraw");
 		JMenuItem checkbalanceitem = new JMenuItem("Check Balance");
+		JMenuItem exit = new JMenuItem("Exit");
 		
 		JPanel contentpanel = new JPanel();
 		contentpanel.setLayout(new GridLayout(3,1));
@@ -69,6 +70,7 @@ public class AccountRemoval {
 		menu.add(home);
 		menu.add(account);
 		menu.add(access);
+		menu.add(exit);
 		account.add(openitem);
 		account.add(deleteaccount);
 		access.add(deposititem);
@@ -132,6 +134,12 @@ public class AccountRemoval {
 			}
 		});
 		
+		exit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+		
 		accountcheck.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -169,6 +177,8 @@ public class AccountRemoval {
 						Connection con = DriverManager.getConnection("jdbc:mysql://localhost/bank", "root", "");
 						Statement st = con.createStatement();
 						st.executeUpdate("delete from bank where accno = '" + accountnumbertext.getText() + "'");
+						st.executeUpdate("delete from deposit where accno = '" + accountnumbertext.getText() + "'");
+						st.executeUpdate("delete from withdraw where accno = '" + accountnumbertext.getText() + "'");
 						accountnumbertext.setText("");
 						accountdetails.setVisible(false);
 						depositpanel.setVisible(false);
