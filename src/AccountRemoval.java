@@ -33,6 +33,7 @@ public class AccountRemoval {
 		JMenuItem deposititem = new JMenuItem("Deposit");
 		JMenuItem withdrawitem = new JMenuItem("Withdraw");
 		JMenuItem checkbalanceitem = new JMenuItem("Check Balance");
+		JMenuItem transactionitem = new JMenuItem("Transaction");
 		JMenuItem exit = new JMenuItem("Exit");
 		
 		JPanel contentpanel = new JPanel();
@@ -76,9 +77,8 @@ public class AccountRemoval {
 		access.add(deposititem);
 		access.add(withdrawitem);
 		access.add(checkbalanceitem);
-		
+		access.add(transactionitem);
 		menubar.add(menu);
-		
 		accountscreen.setJMenuBar(menubar);
 		
 		p1.add(accountnumber);
@@ -131,6 +131,12 @@ public class AccountRemoval {
 		checkbalanceitem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				mainmenu.openCheckBalancePage(accountscreen);
+			}
+		});
+		
+		transactionitem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mainmenu.openTransactionPage(accountscreen);
 			}
 		});
 		

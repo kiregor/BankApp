@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-
 import javax.swing.*;
 
 public class Deposit {
@@ -23,11 +22,10 @@ boolean deposit, checkbalance, accountDelete;
 		JMenuItem deposititem = new JMenuItem("Deposit");
 		JMenuItem withdrawitem = new JMenuItem("Withdraw");
 		JMenuItem checkbalanceitem = new JMenuItem("Check Balance");
+		JMenuItem transactionitem = new JMenuItem("Transaction");
 		JMenuItem exit = new JMenuItem("Exit");
 		
 		JPanel contentpanel = new JPanel();
-		contentpanel.setLayout(new GridLayout(3,1));
-		
 		JLabel accountnumber = new JLabel("Account Number:");
 		JTextField accountnumbertext = new JTextField(5);
 		JButton accountcheck = new JButton("...");
@@ -66,6 +64,7 @@ boolean deposit, checkbalance, accountDelete;
 		access.add(deposititem);
 		access.add(withdrawitem);
 		access.add(checkbalanceitem);
+		access.add(transactionitem);
 		
 		menubar.add(menu);
 		
@@ -129,6 +128,12 @@ boolean deposit, checkbalance, accountDelete;
 			}
 		});
 		
+		transactionitem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mainmenu.openTransactionPage(depositscreen);
+			}
+		});
+		
 		exit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
@@ -183,7 +188,6 @@ boolean deposit, checkbalance, accountDelete;
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				
 			}
 		});
 		
@@ -199,6 +203,8 @@ boolean deposit, checkbalance, accountDelete;
 						if(confirmation == 0) {
 							st.executeUpdate("insert into deposit values('"+ accountnumbertext.getText() + "'," + Integer.parseInt(depositammounttext.getText()) + ", current_date)");
 						}
+						accountnumbertext.setText("");
+						depositammounttext.setText("");
 					}
 					else {
 						int confirmation = JOptionPane.showConfirmDialog(null, "Are you sure you want to withdraw " + depositammounttext.getText() + "?");
@@ -210,6 +216,8 @@ boolean deposit, checkbalance, accountDelete;
 								JOptionPane.showMessageDialog(null, "Your account lacks sufficient funds to perform this transaction!");
 							}
 						}
+						accountnumbertext.setText("");
+						depositammounttext.setText("");
 					}
 				} 
 				catch (NumberFormatException e1) {

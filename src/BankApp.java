@@ -7,6 +7,7 @@ public class BankApp {
 	AccountCreation ac;
 	Deposit d;
 	AccountRemoval da;
+	Transaction t;
 	
 	public BankApp() {
 		mainscreen = new JFrame("Banking App");
@@ -20,11 +21,13 @@ public class BankApp {
 		JMenuItem deposititem = new JMenuItem("Deposit");
 		JMenuItem withdrawitem = new JMenuItem("Withdraw");
 		JMenuItem checkbalanceitem = new JMenuItem("Check Balance");
+		JMenuItem transactionitem = new JMenuItem("Transaction");
 		JMenuItem exit = new JMenuItem("Exit");
 		
 		ac = new AccountCreation(this);
 		d = new Deposit(this);
 		da = new AccountRemoval(this);
+		t = new Transaction(this);
 		
 		menu.add(home);
 		menu.add(account);
@@ -35,6 +38,7 @@ public class BankApp {
 		access.add(deposititem);
 		access.add(withdrawitem);
 		access.add(checkbalanceitem);
+		access.add(transactionitem);
 		
 		menubar.add(menu);
 		
@@ -67,6 +71,12 @@ public class BankApp {
 		checkbalanceitem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				openCheckBalancePage(mainscreen);
+			}
+		});
+		
+		transactionitem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				openTransactionPage(mainscreen);
 			}
 		});
 		
@@ -124,6 +134,12 @@ public class BankApp {
 		d.deposit=false;
 		currentwindow.setVisible(false);
 		d.depositscreen.setVisible(true);
+	}
+	
+	public void openTransactionPage(JFrame currentwindow) {
+		t.transactionscreen.setLocation(currentwindow.getLocation());
+		currentwindow.setVisible(false);
+		t.transactionscreen.setVisible(true);
 	}
 
 }
