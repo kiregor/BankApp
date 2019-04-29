@@ -1,10 +1,15 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
 import javax.swing.*;
 
 public class Deposit {
 JFrame depositscreen;
-boolean deposit;
+boolean deposit, checkbalance;
 	
 	public Deposit(BankApp mainmenu) {
 		depositscreen = new JFrame("Banking App");
@@ -20,23 +25,30 @@ boolean deposit;
 		JTextField accountnumbertext = new JTextField();
 		JButton accountcheck = new JButton("...");
 		
-		JLabel accounttype = new JLabel("Account Type");
-		JLabel gender = new JLabel("Gender");
-		JRadioButton current = new JRadioButton("Current");
-		JRadioButton saving = new JRadioButton("Current");
-		JRadioButton male = new JRadioButton("Current");
-		JRadioButton female = new JRadioButton("Current");
+		JPanel accountdetails = new JPanel();
+		accountdetails.setBorder(BorderFactory.createTitledBorder("Account Details"));
 		
-		JButton create = new JButton("Create Account");
+		JLabel name = new JLabel("Name:");
+		JLabel nametext = new JLabel();
+		JLabel acounttype = new JLabel("Account Type:");
+		JLabel accounttypetext = new JLabel();
+		JLabel gender = new JLabel("Gender:");
+		JLabel gendertext = new JLabel();
+		JLabel currentbalance = new JLabel("Current Balance:");
+		JLabel currentbalancevalue = new JLabel();
 		
 		JPanel p1 = new JPanel();
-		JPanel p2 = new JPanel();
-		JPanel p3 = new JPanel();
-		JPanel p4 = new JPanel();
+		JPanel depositpanel = new JPanel();
+		JLabel depositammount = new JLabel();
+		JTextField depositammounttext = new JTextField(15);
+		JButton transaction = new JButton();
+		
+		depositpanel.add(depositammount);
+		depositpanel.add(depositammounttext);
+		depositpanel.add(transaction);
+		depositpanel.setVisible(false);
+		
 		p1.setLayout(new GridLayout(1,3));
-		p2.setLayout(new GridLayout(1,2));
-		p3.setLayout(new GridLayout(3,1));
-		p4.setLayout(new GridLayout(3,1));
 		
 		menu.add(home);
 		menu.add(openitem);
@@ -47,50 +59,165 @@ boolean deposit;
 		menubar.add(menu);
 		
 		depositscreen.setJMenuBar(menubar);
-		
 		depositscreen.setLayout(new GridLayout(3,1));
 		
 		p1.add(accountnumber);
 		p1.add(accountnumbertext);
 		p1.add(accountcheck);
 		
-		p2.add(p3);
-		p2.add(p4);
-		p3.add(accounttype);
-		p3.add(current);
-		p3.add(saving);
-		p4.add(gender);
-		p4.add(male);
-		p4.add(female);
+		accountdetails.setLayout(new GridLayout(4,2));
+		accountdetails.add(name);
+		accountdetails.add(nametext);
+		accountdetails.add(acounttype);
+		accountdetails.add(accounttypetext);
+		accountdetails.add(gender);
+		accountdetails.add(gendertext);
+		accountdetails.add(currentbalance);
+		accountdetails.add(currentbalancevalue);
+		accountdetails.setVisible(false);
 		
 		depositscreen.add(p1);
-		depositscreen.add(p2);
-		depositscreen.add(create);
+		depositscreen.add(accountdetails);
+		depositscreen.add(depositpanel);
 		
 		depositscreen.setSize(400,400);
 		
 		home.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				mainmenu.mainscreen.setLocation(depositscreen.getLocation());
-				mainmenu.mainscreen.setVisible(true);
-				depositscreen.setVisible(false);
+				mainmenu.openHomePage(depositscreen);
 			}
 		});
 		
 		openitem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				mainmenu.ac.accountscreen.setLocation(depositscreen.getLocation());
-				mainmenu.ac.accountscreen.setVisible(true);
-				depositscreen.setVisible(false);
+				mainmenu.openAccountPage(depositscreen);
+			}
+		});
+		
+		deposititem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mainmenu.openDepositPage(depositscreen);
+			}
+		});
+		
+		withdrawitem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mainmenu.openWithdrawPage(depositscreen);
 			}
 		});
 		
 		checkbalanceitem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				mainmenu.cb.balancescreen.setLocation(depositscreen.getLocation());
-				mainmenu.cb.balancescreen.setVisible(true);
-				depositscreen.setVisible(false);
+				mainmenu.openCheckBalancePage(depositscreen);
 			}
 		});
+		
+		depositscreen.addWindowListener(new WindowAdapter() {
+			public void windowActivated(WindowEvent e) {
+				if(!checkbalance) {
+					if(deposit) {
+						transaction.setText("Deposit");
+						depositammount.setText("Deposit Amount");
+					}
+					else {
+						transaction.setText("Withdraw");
+						depositammount.setText("Withdrawal Amount");
+					}
+				}
+			}
+			
+			public void windowDeactivated(WindowEvent e) {
+				depositpanel.setVisible(false);
+				accountdetails.setVisible(false);
+			}
+		});
+		
+		accountcheck.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Class.forName("com.mysql.cj.jdbc.Driver");
+					Connection con = DriverManager.getConnection("jdbc:mysql://localhost/bank", "root", "");
+					Statement st = con.createStatement();
+					ResultSet rs = st.executeQuery("select substring(bank.accno,1,1), substring(bank.accno,2,1), name, (select sum(amount) from deposit where accno = '"+ accountnumbertext.getText() +"'), (select sum(amount) from withdraw where accno = '"+ accountnumbertext.getText() +"') as balance from bank where accno = '"+ accountnumbertext.getText() +"'");
+					if(rs.next()) {
+						nametext.setText(rs.getString(3));
+						gendertext.setText(genderString(rs.getString(2)));
+						accounttypetext.setText(accountString(rs.getString(1)));
+						currentbalancevalue.setText("£" + Integer.toString(rs.getInt(4) - rs.getInt(5)));
+						accountdetails.setVisible(true);
+						if(!checkbalance) {
+						depositpanel.setVisible(true);
+						}
+					}
+					else {
+						JOptionPane.showMessageDialog(null, "This account does not exist!\nYour account number should follow the pattern: 'CM001'");
+						accountnumbertext.setText("");
+					}
+				} 
+				catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+			}
+		});
+		
+		transaction.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Class.forName("com.mysql.cj.jdbc.Driver");
+					Connection con = DriverManager.getConnection("jdbc:mysql://localhost/bank", "root", "");
+					Statement st = con.createStatement();
+					
+					if(deposit) {
+						int confirmation = JOptionPane.showConfirmDialog(null, "Are you sure you want to deposit " + depositammounttext.getText() + "?");
+						if(confirmation == 0) {
+							st.executeUpdate("insert into deposit values('"+ accountnumbertext.getText() + "'," + Integer.parseInt(depositammounttext.getText()) + ", current_date)");
+						}
+					}
+					else {
+						int confirmation = JOptionPane.showConfirmDialog(null, "Are you sure you want to withdraw " + depositammounttext.getText() + "?");
+						if(confirmation == 0) {
+							if(Integer.parseInt(depositammounttext.getText())<Integer.parseInt(currentbalancevalue.getText().substring(1))) {
+								st.executeUpdate("insert into withdraw values('"+ accountnumbertext.getText() + "'," + Integer.parseInt(depositammounttext.getText()) + ", current_date)");
+							}
+							else {
+								JOptionPane.showMessageDialog(null, "Your account lacks sufficient funds to perform this transaction!");
+							}
+						}
+					}
+				} 
+				catch (NumberFormatException e1) {
+					JOptionPane.showMessageDialog(null, "Please only enter integer values");
+				}
+				catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+	}
+	
+	public static String genderString(String in) {
+		if(in.equals("M")) {
+			in = "Male";
+		}
+		else {
+			System.out.println(in);
+			in = "Female";
+		}
+		
+		return in;
+	}
+	
+	public static String accountString(String in) {
+		if(in.equals("C")) {
+			in = "Current";
+		}
+		else {
+			in = "Savings";
+		}
+		
+		return in;
 	}
 }

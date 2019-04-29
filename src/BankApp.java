@@ -6,7 +6,6 @@ public class BankApp {
 	JFrame mainscreen;
 	AccountCreation ac;
 	Deposit d;
-	CheckBalance cb;
 	
 	public BankApp() {
 		mainscreen = new JFrame("Banking App");
@@ -20,7 +19,6 @@ public class BankApp {
 		
 		ac = new AccountCreation(this);
 		d = new Deposit(this);
-		cb = new CheckBalance(this);
 		
 		menu.add(home);
 		menu.add(openitem);
@@ -34,26 +32,25 @@ public class BankApp {
 		
 		openitem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ac.accountscreen.setLocation(mainscreen.getLocation());
-				ac.accountscreen.setVisible(true);
-				mainscreen.setVisible(false);
+				openAccountPage(mainscreen);
 			}
 		});
 		
 		deposititem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				d.depositscreen.setLocation(mainscreen.getLocation());
-				d.depositscreen.setVisible(true);
-				d.deposit=true;
-				mainscreen.setVisible(false);
+				openDepositPage(mainscreen);
+			}
+		});
+		
+		withdrawitem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				openWithdrawPage(mainscreen);
 			}
 		});
 		
 		checkbalanceitem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				cb.balancescreen.setLocation(mainscreen.getLocation());
-				cb.balancescreen.setVisible(true);
-				mainscreen.setVisible(false);
+				openCheckBalancePage(mainscreen);
 			}
 		});
 		
@@ -63,6 +60,42 @@ public class BankApp {
 	
 	public static void main(String[] args) {
 		new BankApp();
+	}
+	
+	public void openHomePage(JFrame currentwindow) {
+		mainscreen.setLocation(currentwindow.getLocation());
+		mainscreen.setVisible(true);
+		currentwindow.setVisible(false);
+	}
+	
+	public void openAccountPage(JFrame currentwindow) {
+		ac.accountscreen.setLocation(currentwindow.getLocation());
+		ac.accountscreen.setVisible(true);
+		currentwindow.setVisible(false);
+	}
+	
+	public void openDepositPage(JFrame currentwindow) {
+		d.depositscreen.setLocation(currentwindow.getLocation());
+		d.deposit=true;
+		d.checkbalance=false;
+		currentwindow.setVisible(false);
+		d.depositscreen.setVisible(true);
+	}
+	
+	public void openWithdrawPage(JFrame currentwindow) {
+		d.depositscreen.setLocation(currentwindow.getLocation());
+		d.deposit=false;
+		d.checkbalance=false;
+		currentwindow.setVisible(false);
+		d.depositscreen.setVisible(true);
+	}
+	
+	public void openCheckBalancePage(JFrame currentwindow) {
+		d.depositscreen.setLocation(currentwindow.getLocation());
+		d.checkbalance=true;
+		d.deposit=false;
+		currentwindow.setVisible(false);
+		d.depositscreen.setVisible(true);
 	}
 
 }
